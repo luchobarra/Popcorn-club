@@ -3,7 +3,7 @@ import React from "react";
 import { FiltersBar } from "../FiltersBar";
 
 export interface MovieFilters {
-    genres: string[];
+    genres: number[];
     yearFrom: number | null;
     yearTo: number | null;
     minRating: number;
