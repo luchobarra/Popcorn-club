@@ -126,11 +126,11 @@ import { useContent } from "../../context/ContentContext"; // AJUSTA RUTA si hac
 export const ContentFiltersContainer: React.FC = () => {
   const {
     genresMap,
-    allGenres,
+    // allGenres,
     appliedFilters,
     handleApplyFilters,
     setAppliedFilters,
-    contentType,
+    // contentType,
   } = useContent();
 
   // estados internos para el formulario (sincronizados con appliedFilters)
@@ -180,7 +180,7 @@ export const ContentFiltersContainer: React.FC = () => {
           ))}
         </select>
       </div>
-
+ 
       <div>
         <label>Año:</label>
         <input type="number" value={year} onChange={(e) => setYear(e.target.value)} placeholder="Ej: 2023" />
@@ -195,11 +195,8 @@ export const ContentFiltersContainer: React.FC = () => {
         <label>Ordenar por:</label>
         <select value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
           <option value="popularity.desc">Más populares</option>
-          <option value="popularity.asc">Menos populares</option>
           <option value="vote_average.desc">Mejor puntuadas</option>
-          <option value="vote_average.asc">Peor puntuadas</option>
           <option value="release_date.desc">Más recientes</option>
-          <option value="release_date.asc">Más antiguas</option>
         </select>
       </div>
 

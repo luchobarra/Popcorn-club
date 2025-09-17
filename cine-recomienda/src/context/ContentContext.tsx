@@ -1,7 +1,7 @@
 // src/context/ContentContext.tsx
-import React, { createContext, useContext } from "react";
+import { createContext, useContext } from "react";
 
-export type ContentType = "movies" | "series&tv";
+export type ContentType = "movies" | "series";
 
 /** Filtros que usa el ContentFiltersContainer (igual que antes) */
 export interface FiltersState {
@@ -47,6 +47,7 @@ export interface ContentContextValue {
   loadMoreItems: () => Promise<void>;
   // opcional: exponer setAppliedFilters si se necesita
   setAppliedFilters: (f: FiltersState) => void;
+  onCardClick: (id: number, type?: "movies" | "series") => void;
 }
 
 const ContentContext = createContext<ContentContextValue | undefined>(undefined);

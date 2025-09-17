@@ -1,6 +1,6 @@
 import  { createContext, useContext, useState, type ReactNode } from "react";
 
-export type ContentType = "movies" | "series&tv";
+export type ContentType = "movies" | "series";
 
 interface ContentTypeContextValue {
   contentType: ContentType;

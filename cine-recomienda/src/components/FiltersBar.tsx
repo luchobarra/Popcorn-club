@@ -1,5 +1,5 @@
 import type { ChangeEvent } from "react";
-import type { MovieFilters, Genre } from "./containers/FiltersBarContainer"; // ajusta import si está en otro archivo
+import type { MovieFilters, Genre } from "./containers/FiltersBarContainer"; 
 
 interface FiltersBarProps {
   filters: MovieFilters;

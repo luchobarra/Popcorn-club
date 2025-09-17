@@ -1,7 +1,5 @@
-import Navbar from "./Navbar"
+import { NavBar } from "./containers/NavBarContainer";
 
 export const Header = () => {
-    return (
-        <Navbar />
-    )
-}
+  return <NavBar />; // ⬅️ renderiza el CONTENEDOR, no la View
+};

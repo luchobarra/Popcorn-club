@@ -1,5 +1,3 @@
-"use client"
-
 import { Button } from "./ui/button"
 import { Badge } from "./ui/badge"
 import { Play, Star, TrendingUp, Users, ArrowRight, Sparkles } from "lucide-react"
