@@ -1,31 +1,62 @@
-import { useMemo } from "react";
-import { ContentContainer } from "../containers/ContentContainer";
-import { ContentFiltersContainer } from "../containers/ContentFiltersContainer";
-import PageCards from "../pages/PageCards";
+// ContentPage.tsx
+import React, { useMemo, useEffect, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 import { useContent } from "../../context/ContentContext";
+import { ContentContainer } from "../containers/ContentContainer";
+// import { Hero } from "../ui/HeroShell";
+import PageCards from "../pages/PageCards";
+import { FilterDrawer } from "../presentational/filter/FilterDrawer";
 
 type UIMovie = {
   id: number;
   title: string;
-  poster_path: string;   // PageCards espera string SIEMPRE
+  poster_path: string;
   vote_average: number;
-  genre?: string;        // un solo género para UI (puedes cambiar a join si querés)
+  genre?: string;
   year?: number;
   views?: string;
 };
 
-const ContentInner = () => {
-  const { items, contentType, genresMap } = useContent();
+const ContentInner: React.FC = () => {
+  const {
+    items,
+    contentType,
+    genresMap,
+    loading,
+    appliedFilters,
+    handleApplyFilters,
+    setAppliedFilters,
+  } = useContent();
 
-  // Normalizamos ContentItem[] -> UIMovie[] que espera PageCards
+  // Drawer de filtros
+  const [filtersOpen, setFiltersOpen] = useState(false);
+
+  // Crossfade SOLO cuando cambia tipo/filtros
+  const [showGrid, setShowGrid] = useState(true);
+
+  // Clave estable por tipo + filtros (NO cambia al paginar)
+  const gridKey = useMemo(() => {
+    const f = appliedFilters ?? {};
+    return `${contentType}:${f.genre ?? "all"}:${f.year || "any"}:${f.minVote || 0}:${f.sortBy || ""}`;
+  }, [contentType, appliedFilters]);
+
+  // Salida previa al cambio (apagamos grid)
+  useEffect(() => {
+    setShowGrid(false);
+  }, [gridKey]);
+
+  // Entrada cuando termina el fetch del nuevo set
+  useEffect(() => {
+    if (!loading && !showGrid) setShowGrid(true);
+  }, [loading, showGrid]);
+
+  // Normalización para PageCards
   const normalizedMovies: UIMovie[] = useMemo(() => {
     return (items || []).map((i: any) => {
-      // Year desde release_date/first_air_date
       const yearStr = (i.release_date || i.first_air_date || "").split("-")[0];
       const yearNum = Number(yearStr);
       const year = Number.isFinite(yearNum) && yearNum > 0 ? yearNum : undefined;
 
-      // poster_path como string (si ya viene con http, lo dejamos)
       let poster = "";
       if (i.poster_path) {
         poster = String(i.poster_path);
@@ -34,7 +65,6 @@ const ContentInner = () => {
         }
       }
 
-      // Primer género legible (si preferís todos, usá join(", "))
       const genreNames = (i.genre_ids || [])
         .map((gid: number) => genresMap?.[gid])
         .filter(Boolean) as string[];
@@ -42,29 +72,82 @@ const ContentInner = () => {
 
       return {
         id: i.id,
-        title: i.title,                       // ContentContainer ya setea title = title || name
-        poster_path: poster,                  // siempre string
+        title: i.title,
+        poster_path: poster,
         vote_average: i.vote_average ?? 0,
         genre,
         year,
-        views: undefined,                     // si luego querés simular views, lo agregamos acá
+        views: undefined,
       };
     });
   }, [items, genresMap]);
 
+  // Handlers del Hero
+  const scrollToContent = () => {
+    document.getElementById("page-content")?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+  const openFilters = () => setFiltersOpen(true);
+
+  // Géneros para el Drawer
+  const genres = useMemo(
+    () => Object.entries(genresMap).map(([id, name]) => ({ id: Number(id), name })),
+    [genresMap]
+  );
+
+  const resetFilters = { genre: null, year: "", minVote: 0, sortBy: "vote_average.desc" };
+
   return (
     <>
-      <ContentFiltersContainer />
-      <PageCards
-        movies={normalizedMovies}
-        title={contentType === "movies" ? "Películas" : "Series & TV"}
-        subtitle="Recomendadas para vos"
+      {/* HERO fijo arriba */}
+      {/* <Hero
+        variant={contentType === "movies" ? "movies" : "series"}
+        onScrollToContent={scrollToContent}
+        onOpenFilters={openFilters}
+      /> */}
+
+      {/* Ancla de contenido */}
+      <section id="page-content">
+        {/* Crossfade SOLO cuando cambia gridKey (tipo/filtros). Paginación no toca esto. */}
+        <AnimatePresence mode="wait" initial={false}>
+          {showGrid && (
+            <motion.div
+              key={gridKey}
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -8 }}
+              transition={{ duration: 0.28, ease: [0.2, 0.8, 0.2, 1] }}
+            >
+              <PageCards
+                movies={normalizedMovies}
+                title={contentType === "movies" ? "Películas" : "Series & TV"}
+                subtitle="Recomendadas para vos"
+              />
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </section>
+
+      {/* Drawer de filtros (presentacional) */}
+      <FilterDrawer
+        open={filtersOpen}
+        onClose={() => setFiltersOpen(false)}
+        initial={appliedFilters}
+        genres={genres}
+        variant={contentType === "movies" ? "movies" : "series"}
+        onApply={(f) => {
+          handleApplyFilters(f);
+          setFiltersOpen(false);
+        }}
+        onReset={() => {
+          setAppliedFilters(resetFilters);
+          setFiltersOpen(false);
+        }}
       />
     </>
   );
 };
 
-export default function ContentPage() {
+export function ContentPage() {
   return (
     <ContentContainer>
       <ContentInner />

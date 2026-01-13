@@ -1,10 +1,8 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, useCallback } from "react";
 import ContentContext, { type ContentItem, type FiltersState, type Genre } from "../../context/ContentContext";
-import { useContentType } from "../../context/ContentTypeContext"; // AJUSTA RUTA si hace falta
-import { tmdbFetch } from "../../api/tmdb"; // AJUSTA RUTA si hace falta
-import { useNavigate } from "react-router-dom";
-import { contentDetail } from "../../../lib/contentDetail"; // helper global 
-import { usePageLoading } from "../../../lib/UsePageLoading"
+import { tmdbFetch } from "../../api/tmdb"; 
+import { useNavigate, useLocation } from "react-router-dom";
+import { contentDetail } from "../../../lib/contentDetail";  
 
 
 interface Props {
@@ -23,18 +21,20 @@ export const ContentContainer: React.FC<Props> = ({ children }) => {
   // contentType viene del ContentTypeContext (Navbar setea ahí)
   const navigate = useNavigate();
 
-
-  const { contentType, setContentType } = useContentType();
-
   const [items, setItems] = useState<ContentItem[]>([]);
   const [allGenres, setAllGenres] = useState<Genre[]>([]);
   const [genresMap, setGenresMap] = useState<Record<number, string>>({});
   const [page, setPage] = useState<number>(1);
   const [loading, setLoading] = useState<boolean>(false);
+  const { pathname } = useLocation();
+  const routeType: "movies" | "series" = pathname.startsWith("/series") ? "series" : "movies";
 
-  const pageLoading = loading || Object.keys(genresMap).length === 0
+  const setContentType = useCallback((t: "movies" | "series") => {
+    if (t !== routeType) {
+      navigate(t === "movies" ? "/movies" : "/series");
+    }
+  }, [navigate, routeType]);
 
-  usePageLoading(pageLoading)
 
   const [appliedFilters, setAppliedFilters] = useState<FiltersState>({
     genre: null,
@@ -46,13 +46,13 @@ export const ContentContainer: React.FC<Props> = ({ children }) => {
   // para deduplicar eficiencia O(1)
   const seenIdsRef = useRef<Set<number>>(new Set());
   // para descartar respuestas viejas
-  const requestIdRef = useRef(0);
+  const requestIdRef = useRef(0); 
 
   // --- Fetch géneros según tipo (movie | tv)
   useEffect(() => {
     const fetchGenres = async () => {
       try {
-        const endpoint = contentType === "movies" ? "/genre/movie/list" : "/genre/tv/list";
+        const endpoint = routeType === "movies" ? "/genre/movie/list" : "/genre/tv/list";
         const data = await tmdbFetch(`${endpoint}?language=es-ES`);
         setAllGenres(data.genres || []);
         const map: Record<number, string> = {};
@@ -64,36 +64,47 @@ export const ContentContainer: React.FC<Props> = ({ children }) => {
     };
 
     fetchGenres();
-  }, [contentType]);
+  }, [routeType]);
 
   // --- Helper: construir URL discover según type + filtros + página
   const buildUrl = (pageNumber: number = 1) => {
-    const type = contentType === "movies" ? "movie" : "tv";
+    const isMovies = routeType === "movies";
+    const type = isMovies ? "movie" : "tv";
+  
+    // defaults más sanos: TV por popularidad y con más votos
+    const sortBy = appliedFilters.sortBy || (isMovies ? "vote_average.desc" : "popularity.desc");
+    const minVotes = isMovies ? 200 : 300;
+  
     const params: string[] = [
       "language=es-ES",
+      "include_adult=false",
       `page=${pageNumber}`,
-      "vote_count.gte=50", // mínimo 50 votos para que seleccione una pelicula/serie
-      `sort_by=${appliedFilters.sortBy || "vote_average.desc"}`,
+      `vote_count.gte=${minVotes}`,
+      `sort_by=${sortBy}`,
     ];
-
-    if (appliedFilters.genre != null) params.push(`with_genres=${appliedFilters.genre}`);
-
+  
+    if (appliedFilters.genre != null) {
+      params.push(`with_genres=${appliedFilters.genre}`);
+    } else if (!isMovies) {
+      // En TV, si no elegiste género, evitá animación (suele traer anime desconocido)
+      params.push("without_genres=16");
+    }
+  
     if (appliedFilters.year) {
-      if (contentType === "movies") {
+      if (isMovies) {
         params.push(`primary_release_year=${appliedFilters.year}`);
       } else {
-        // para tv: filtramos por rango de fechas del año
         params.push(`first_air_date.gte=${appliedFilters.year}-01-01`);
         params.push(`first_air_date.lte=${appliedFilters.year}-12-31`);
       }
     }
-
+  
     if (appliedFilters.minVote && appliedFilters.minVote > 0) {
       params.push(`vote_average.gte=${appliedFilters.minVote}`);
     }
-
+  
     return `/discover/${type}?${params.join("&")}`;
-  };
+  };  
 
   // --- Fetch inicial / cuando cambian filtros o génerosMap -> precargar p1 y p2
   useEffect(() => {
@@ -114,9 +125,9 @@ export const ContentContainer: React.FC<Props> = ({ children }) => {
         seenIdsRef.current.clear();
         const formatted = allResults
           .map((item: any) => {
-            const title = contentType === "movies" ? item.title : item.name;
+            const title = routeType === "movies" ? item.title : item.name;
             const yearString =
-              contentType === "movies" ? item.release_date : item.first_air_date;
+              routeType === "movies" ? item.release_date : item.first_air_date;
             const year = yearString ? Number(yearString.split("-")[0]) : undefined;
 
             return {
@@ -150,7 +161,7 @@ export const ContentContainer: React.FC<Props> = ({ children }) => {
 
     fetchFiltered();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [appliedFilters, genresMap, contentType]);
+  }, [appliedFilters, genresMap, routeType]);
 
   // --- loadMore (infinite scroll / "cargar más")
   const loadMoreItems = async () => {
@@ -166,9 +177,9 @@ export const ContentContainer: React.FC<Props> = ({ children }) => {
       const newResults = res.results || [];
       const formatted = newResults
         .map((item: any) => {
-          const title = contentType === "movies" ? item.title : item.name;
+          const title = routeType === "movies" ? item.title : item.name;
           const yearString =
-            contentType === "movies" ? item.release_date : item.first_air_date;
+            routeType === "movies" ? item.release_date : item.first_air_date;
           const year = yearString ? Number(yearString.split("-")[0]) : undefined;
 
           return {
@@ -204,7 +215,6 @@ export const ContentContainer: React.FC<Props> = ({ children }) => {
   const handleApplyFilters = (f: FiltersState) => {
     // aplicamos filtros (se cargan de nuevo)
     setAppliedFilters(f);
-    setItems([]);
     setPage(1);
     seenIdsRef.current.clear();
     // la effect de [appliedFilters] se encargará del fetch
@@ -212,7 +222,7 @@ export const ContentContainer: React.FC<Props> = ({ children }) => {
 
   // --- click global para ir al detalle
   const onCardClick = (id: number, explicitType?: "movies" | "series") => {
-    const type = explicitType ?? (contentType === "movies" ? "movies" : "series");
+    const type = explicitType ?? (routeType === "movies" ? "movies" : "series");
     contentDetail(navigate, { type, id });
   };
 
@@ -227,12 +237,12 @@ export const ContentContainer: React.FC<Props> = ({ children }) => {
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [loading, page, genresMap, contentType]);
+  }, [loading, page, genresMap, routeType]);
 
   // --- valor que exponemos en el contexto
   const ctxValue = {
-    contentType,
-    setContentType,
+    contentType: routeType,
+    routeType,
     items,
     loading,
     page,
@@ -243,6 +253,7 @@ export const ContentContainer: React.FC<Props> = ({ children }) => {
     loadMoreItems,
     setAppliedFilters,
     onCardClick,
+    setContentType,
   };
 
   return <ContentContext.Provider value={ctxValue}>{children}</ContentContext.Provider>;

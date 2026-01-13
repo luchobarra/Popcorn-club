@@ -9,7 +9,7 @@
   --color-accent: #ec4899;        /* Rosa fuerte (elementos destacados) */
   --color-white: #FFFFFF;        /*   color blanco */
 
-  --color-background: #0f172a;    /* Fondo general */
+  --color-background: #000000;    /* Fondo general */
   --color-surface: #1e293b;       /* Secciones o contenedores */
   --color-card: #334155;          /* Tarjetas o bloques de contenido */
 
@@ -43,3 +43,4 @@ html, body, #root {
     will-change: opacity, transform, filter;
   }
 }
+:root { --navbar-height: 64px; }

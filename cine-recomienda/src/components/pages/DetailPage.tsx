@@ -1,24 +1,18 @@
-// src/components/pages/DetailPage.tsx
 import React, { useEffect, useMemo, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-
-// UI sections (ajustá las rutas)
+// UI sections (ajusta las rutas)
 import { DetailHero } from "../presentational/detail/DetailHero";
 import { DetailOverview } from "../presentational/detail/DetailOverview";
 import { DetailCastCarousel } from "../presentational/detail/DetailCastCarousel";
 import { DetailVideosGrid } from "../presentational/detail/DetailVideosGrid";
 import { DetailSimilarCarousel } from "../presentational/detail/DetailSimilarCarousel";
-import { DetailSeasons } from "../presentational/detail/DetailSeasons";
-
-// Servicio + helper de navegación (ajustá rutas si hace falta)
+// Servicio + helper de navegación 
 import { fetchDetail } from "../../api/tmdbDetail";
 import { contentDetail } from "../../../lib/contentDetail";
-
 import { usePageLoading } from "../../../lib/UsePageLoading"
 import { AnimatedContent } from "../transitions/AnimatedContent"
 
 
-// Tipos (ref: tu DetailModel del servicio)
 type DetailType = "movies" | "series";
 interface DetailModel {
   id: number;
@@ -118,6 +112,8 @@ export const DetailPage: React.FC = () => {
     [data]
   );
 
+  usePageLoading(loading)
+
   if (errorMsg) {
     return (
       <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-20 text-center">
@@ -132,8 +128,6 @@ export const DetailPage: React.FC = () => {
     );
   }
 
-  usePageLoading(loading)
-
   // Render final
   return (
     <>
@@ -145,11 +139,11 @@ export const DetailPage: React.FC = () => {
             direction="vertical"
             reverse={false}
             duration={1}
-            initialOpacity={0.2}
+            initialOpacity={0.5}
             animateOpacity
             scale={1.1}
             threshold={0.2}
-            delay={0.3}
+            delay={0.2}
           >
             <DetailHero
               title={data.title}
@@ -179,11 +173,11 @@ export const DetailPage: React.FC = () => {
               direction="vertical"
               reverse={false}
               duration={1}
-              initialOpacity={0.2}
+              initialOpacity={0.5}
               animateOpacity
               scale={1.1}
               threshold={0.2}
-              delay={0.3}
+              delay={0.2}
             >
               <DetailOverview
                 overview={data.overview}
@@ -221,31 +215,6 @@ export const DetailPage: React.FC = () => {
             >
               <DetailVideosGrid videos={videosForUI} />
             </AnimatedContent>
-  
-            {data.type === "series" && data.seasons ? (
-              <AnimatedContent
-                distance={16}
-                direction="vertical"
-                duration={1}
-                ease="power3.out"
-                initialOpacity={0}
-                animateOpacity
-                threshold={0.2}
-              >
-                <DetailSeasons
-                  seasons={Array.from({ length: data.seasons }).map((_, idx) => ({
-                    id: idx + 1,
-                    seasonNumber: idx + 1,
-                    name: `Temporada ${idx + 1}`,
-                    airDate: undefined,
-                    episodeCount: undefined as unknown as number,
-                    overview: null,
-                    posterPath: null,
-                  }))}
-                  onSeasonClick={(sn) => console.log("Ir a temporada", sn)}
-                />
-              </AnimatedContent>
-            ) : null}
   
             <AnimatedContent
               distance={24}

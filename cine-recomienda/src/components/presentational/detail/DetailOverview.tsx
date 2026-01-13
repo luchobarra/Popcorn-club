@@ -24,7 +24,7 @@ export const DetailOverview: React.FC<DetailOverviewProps> = ({
   return (
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-10">
         {/* Título */}
-        <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-[var(--color-text-primary)] mb-4 sm:mb-5 md:mb-6">
+        <h2 className="text-base sm:text-lg md:text-xl lg:text-2xl font-bold text-[var(--color-text-primary)] mb-3 sm:mb-4 md:mb-5">
           Resumen
         </h2>
     

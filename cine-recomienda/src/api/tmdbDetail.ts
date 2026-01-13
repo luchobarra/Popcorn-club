@@ -45,15 +45,12 @@ export async function fetchDetail(type: DetailType, id: string | number, lang = 
     profilePath: c.profile_path ? `https://image.tmdb.org/t/p/w185${c.profile_path}` : null,
   }));
 
-  const similar = (data.similar?.results ?? []).slice(0, 12).map((s: any) => {
-    const sIsMovie = !!s.title;
-    return {
-      id: s.id,
-      title: (sIsMovie ? s.title : s.name) ?? "",
-      posterPath: s.poster_path ? `https://image.tmdb.org/t/p/w342${s.poster_path}` : null,
-      type: sIsMovie ? "movies" : "series",
-    };
-  });
+  const similar = (data.similar?.results ?? []).slice(0, 12).map((s: any) => ({
+    id: s.id,
+    title: isMovie ? (s.title ?? "") : (s.name ?? ""),
+    posterPath: s.poster_path ? `https://image.tmdb.org/t/p/w342${s.poster_path}` : null,
+    type,
+  }));  
 
   return {
     id: data.id,

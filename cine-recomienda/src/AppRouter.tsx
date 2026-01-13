@@ -3,7 +3,7 @@ import { Routes, Route, useLocation } from "react-router-dom"
 import { AnimatePresence, MotionConfig } from "framer-motion"
 import { RouteShell } from "./components/transitions/RouteShell"
 import { Home } from "./components/pages/Home"
-import ContentPage from "./components/pages/ContentPage"
+import { ContentPage } from "./components/pages/ContentPage"
 import { DetailPage } from "./components/pages/DetailPage"
 
 export const AppRouter = () => {

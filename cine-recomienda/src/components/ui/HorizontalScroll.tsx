@@ -1,11 +1,14 @@
+// src/components/ui/HorizontalScroll.tsx
 import React, { useRef } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 interface HorizontalScrollProps {
   children: React.ReactNode;
-  className?: string;
+  className?: string;   // padding externo lo maneja el contenedor padre (Home)
   ariaLabel?: string;
   showArrows?: boolean;
+  gap?: string;         // gap en la pista
+  edgePadding?: boolean; // true => padding interno; false => sin padding interno (flush)
 }
 
 export const HorizontalScroll: React.FC<HorizontalScrollProps> = ({
@@ -13,10 +16,12 @@ export const HorizontalScroll: React.FC<HorizontalScrollProps> = ({
   className = "",
   ariaLabel = "Carrusel",
   showArrows = true,
+  gap = "",
+  edgePadding = true,
 }) => {
   const ref = useRef<HTMLDivElement>(null);
 
-  const scrollBy = (dir: "left" | "right") => {
+  const scrollByDir = (dir: "left" | "right") => {
     const el = ref.current;
     if (!el) return;
     const amount = Math.round(el.clientWidth * 0.85);
@@ -24,40 +29,45 @@ export const HorizontalScroll: React.FC<HorizontalScrollProps> = ({
   };
 
   return (
-    <div className={`relative ${className}`}>
+    <div className={`relative ${className}`} role="region" aria-label={ariaLabel}>
+      {/* carril: podemos quitar padding interno para que el contenido arranque flush */}
+      <div
+        ref={ref}
+        className={`overflow-x-auto no-scrollbar ${edgePadding ? "px-[clamp(.6rem,1.6vw,1.2rem)]" : "px-0"} touch-pan-x`}
+      >
+        <div className={`flex items-stretch ${gap}`}>{children}</div>
+      </div>
+
       {showArrows && (
         <>
+          {/* md+: flechas mitad afuera/mitad adentro, iguales en todos los carruseles */}
           <button
-            onClick={() => scrollBy("left")}
-            className="absolute left-2 top-1/2 -translate-y-1/2 z-10 rounded-full p-2 bg-[var(--color-surface)]/90 hover:bg-[var(--color-surface)] focus-visible:ring-2 focus-visible:ring-[var(--color-secondary)]"
-            aria-label="Desplazar a la izquierda"
+            type="button"
+            onClick={() => scrollByDir("left")}
+            aria-label="Anterior"
+            className="hidden md:flex absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1/2 z-10
+                       h-8 w-8 rounded-full bg-[var(--color-surface)]/80
+                       border border-[var(--color-surface)]
+                       hover:bg-[var(--color-surface)]/95 backdrop-blur
+                       items-center justify-center"
           >
-            <ChevronLeft className="w-5 h-5 text-[var(--color-text-primary)]" />
+            <ChevronLeft className="h-5 w-5 text-[var(--color-text-primary)]" />
           </button>
+
           <button
-            onClick={() => scrollBy("right")}
-            className="absolute right-2 top-1/2 -translate-y-1/2 z-10 rounded-full p-2 bg-[var(--color-surface)]/90 hover:bg-[var(--color-surface)] focus-visible:ring-2 focus-visible:ring-[var(--color-secondary)]"
-            aria-label="Desplazar a la derecha"
+            type="button"
+            onClick={() => scrollByDir("right")}
+            aria-label="Siguiente"
+            className="hidden md:flex absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 z-10
+                       h-8 w-8 rounded-full bg-[var(--color-surface)]/80
+                       border border-[var(--color-surface)]
+                       hover:bg-[var(--color-surface)]/95 backdrop-blur
+                       items-center justify-center"
           >
-            <ChevronRight className="w-5 h-5 text-[var(--color-text-primary)]" />
+            <ChevronRight className="h-5 w-5 text-[var(--color-text-primary)]" />
           </button>
         </>
       )}
-
-      <div
-        ref={ref}
-        role="region"
-        aria-label={ariaLabel}
-        className="overflow-x-auto scroll-smooth snap-x snap-mandatory flex gap-4 pb-2 pr-6"
-      >
-        {React.Children.map(children, (child) => (
-          <div className="snap-start">{child}</div>
-        ))}
-      </div>
-
-      {/* Degradés laterales */}
-      <div className="pointer-events-none absolute inset-y-0 left-0 w-8 bg-gradient-to-r from-[var(--color-background)] to-transparent" />
-      <div className="pointer-events-none absolute inset-y-0 right-0 w-8 bg-gradient-to-l from-[var(--color-background)] to-transparent" />
     </div>
   );
 };

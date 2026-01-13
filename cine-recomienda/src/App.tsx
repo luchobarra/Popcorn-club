@@ -9,7 +9,8 @@ export const App = () => {
         <Header />
       
 
-        <AppRouter />       
+        <AppRouter /> 
+              
       </div>
     </>
   );

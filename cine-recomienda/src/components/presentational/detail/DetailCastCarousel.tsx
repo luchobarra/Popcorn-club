@@ -17,17 +17,23 @@ export const DetailCastCarousel: React.FC<DetailCastCarouselProps> = ({ cast }) 
 
   return (
     <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-10">
-      <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-[var(--color-text-primary)] mb-4 sm:mb-5 md:mb-6">
+      <h2 className="text-base sm:text-lg md:text-xl lg:text-2xl font-bold text-[var(--color-text-primary)] mb-3 sm:mb-4 md:mb-5">
         Reparto principal
       </h2>
   
-      <HorizontalScroll ariaLabel="Reparto principal">
+      {/* Usamos gap en la pista para separar cada card */}
+      <HorizontalScroll ariaLabel="Reparto principal" gap="gap-3 sm:gap-4 md:gap-5">
         {cast.map((actor) => (
           <div
             key={actor.id}
-            className="w-24 sm:w-28 md:w-32 lg:w-36 flex-shrink-0 text-center"
+            className="flex-shrink-0 text-center
+                       w-20 sm:w-24 md:w-28 lg:w-32"
           >
-            <div className="w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 lg:w-36 lg:h-36 rounded-full overflow-hidden mx-auto mb-2 border border-[var(--color-surface)] shadow bg-[var(--color-surface)]">
+            <div
+              className="rounded-full overflow-hidden mx-auto mb-2
+                         border border-[var(--color-surface)] shadow bg-[var(--color-surface)]
+                         w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 lg:w-32 lg:h-32"
+            >
               {actor.profilePath ? (
                 <img
                   src={actor.profilePath}
@@ -37,15 +43,16 @@ export const DetailCastCarousel: React.FC<DetailCastCarouselProps> = ({ cast }) 
                 />
               ) : (
                 <div className="w-full h-full flex items-center justify-center">
-                  <User className="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 text-[var(--color-text-secondary)]" />
+                  <User className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 text-[var(--color-text-secondary)]" />
                 </div>
               )}
             </div>
   
-            <p className="text-[var(--color-text-primary)] font-medium text-xs sm:text-sm md:text-base truncate">
+            {/* Texto: mantiene truncado y escala suave */}
+            <p className="text-[var(--color-text-primary)] font-medium text-[11px] sm:text-xs md:text-sm truncate">
               {actor.name}
             </p>
-            <p className="text-[var(--color-text-secondary)] text-[0.7rem] sm:text-xs md:text-sm truncate">
+            <p className="text-[var(--color-text-secondary)] text-[10px] sm:text-[11px] md:text-xs truncate">
               {actor.character}
             </p>
           </div>
