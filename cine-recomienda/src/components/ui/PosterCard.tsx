@@ -1,4 +1,3 @@
-// src/components/ui/PosterCard.tsx
 import React, { useRef, useState } from "react"
 import { type PosterProps } from "./Poster"
 
@@ -7,7 +6,7 @@ export interface PosterCardProps {
   type: "movies" | "series"
   title: string
   posterUrl: string | null
-  backdropUrl?: string | null          // 👈 NUEVO
+  backdropUrl?: string | null       
   size?: PosterProps["size"]
   aspect?: "poster" | "landscape"
   onClick: (id: number, type: "movies" | "series") => void
@@ -28,7 +27,6 @@ export const PosterCard: React.FC<PosterCardProps> = ({
   const btnRef = useRef<HTMLButtonElement>(null)
   const [pressing, setPressing] = useState(false)
 
-  // tilting
   const onMouseMove: React.MouseEventHandler<HTMLButtonElement> = (e) => {
     if (prefersReduced()) return
     const el = btnRef.current; if (!el) return
@@ -49,17 +47,14 @@ export const PosterCard: React.FC<PosterCardProps> = ({
     setTimeout(() => { setPressing(false); onClick(id, type) }, 140)
   }
 
-  // medidas consistentes
   const classSize =
     aspect === "landscape"
       ? "aspect-[16/9] w-[clamp(14rem,22vw,18rem)]"
       : "aspect-[2/3]  w-[clamp(9rem,16vw,12rem)]"
-
-  // fuente de imagen según aspecto + fallback con letterbox
   const usingLandscape = aspect === "landscape"
   const primarySrc = usingLandscape ? backdropUrl : posterUrl
   const fallbackSrc = !primarySrc && usingLandscape ? posterUrl : null
-  const showContain = usingLandscape && !!fallbackSrc // letterbox solo si no hay backdrop
+  const showContain = usingLandscape && !!fallbackSrc 
 
   return (
     <button
@@ -70,7 +65,7 @@ export const PosterCard: React.FC<PosterCardProps> = ({
       onMouseMove={onMouseMove}
       onMouseLeave={onMouseLeave}
       className={`
-        group relative inline-block rounded-2xl overflow-hidden cursor-pointer select-none
+        group relative inline-block rounded-2xl cursor-pointer select-none
         focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)]/70
         transition-[transform,box-shadow,filter] duration-200 will-change-transform
         ${classSize}
@@ -82,7 +77,6 @@ export const PosterCard: React.FC<PosterCardProps> = ({
         filter: pressing ? "brightness(1.02)" : undefined,
       }}
     >
-      {/* Wrapper con fondo para letterbox limpio en fallbacks */}
       <div className={`w-full h-full ${showContain ? "bg-[var(--color-surface)]/40" : ""}`}>
         <img
           src={(primarySrc ?? fallbackSrc) || "/placeholder.svg"}
@@ -96,8 +90,7 @@ export const PosterCard: React.FC<PosterCardProps> = ({
           loading="lazy"
         />
       </div>
-
-      {/* Sheen */}
+      
       <span
         aria-hidden
         className="pointer-events-none absolute -inset-[30%] translate-x-[-120%] rotate-[20deg] opacity-0 group-hover:opacity-100"

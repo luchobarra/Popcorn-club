@@ -2,29 +2,29 @@
 
 @theme {
   
-  --color-*: initial;       /* ✅ Elimina todos los colores predeterminados */
+  --color-*: initial;       /* Elimina todos los colores predeterminados */
 
-  --color-primary: #1f2937;       /* Azul oscuro (navbar, botones principales) */
+  /* --color-primary: #1f2937;       Azul oscuro (navbar, botones principales) */
   --color-secondary: #06b6d4;     /* Celeste vibrante (hover, detalles) */
   --color-accent: #ec4899;        /* Rosa fuerte (elementos destacados) */
   --color-white: #FFFFFF;        /*   color blanco */
 
-  --color-background: #000000;    /* Fondo general */
-  --color-surface: #1e293b;       /* Secciones o contenedores */
-  --color-card: #334155;          /* Tarjetas o bloques de contenido */
+  --color-background: #000000;   /* Fondo general */
+  --color-surface: #1e293b;      /* Secciones o contenedores */
+  /* --color-card: #334155;          Tarjetas o bloques de contenido */
 
   --color-text-primary: #f8fafc;      /* Texto principal: blanco suave */
   --color-text-secondary: #cbd5e1;    /* Subtítulos, labels */
   --color-text-muted: #94a3b8;        /* Texto de menor jerarquía (fechas, subtítulos) */
 
-  --color-success: #22c55e;
+  /* --color-success: #22c55e;
   --color-warning: #f59e0b;
-  --color-error: #ef4444;
+  --color-error: #ef4444; */
 
-  --color-rating-excellent: var(--color-success);
+  /* --color-rating-excellent: var(--color-success);
   --color-rating-good: var(--color-warning);
   --color-rating-average: #f97316;
-  --color-rating-poor: var(--color-error);
+  --color-rating-poor: var(--color-error); */
 }
 
 html, body, #root {
@@ -44,3 +44,16 @@ html, body, #root {
   }
 }
 :root { --navbar-height: 64px; }
+
+@keyframes logo-scroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-logo-scroll {
+  animation: logo-scroll 28s linear infinite;
+}

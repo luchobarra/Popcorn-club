@@ -11,7 +11,7 @@ export function contentDetail(
   navigate: NavigateFunction,
   { type, id }: contentDetailParams
 ) {
-  // normalizamos SIEMPRE a tu convención de rutas
+
   const appType: contentDetailType =
     type === "movie" || type === "movies" ? "movies" : "series";
 

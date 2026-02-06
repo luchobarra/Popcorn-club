@@ -8,7 +8,6 @@ export const App = () => {
       <div className="min-h-screen bg-[var(--color-background)] text-[var(--color-text-primary)]">
         <Header />
       
-
         <AppRouter /> 
               
       </div>

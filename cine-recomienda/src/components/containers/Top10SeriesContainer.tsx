@@ -1,12 +1,9 @@
-// src/components/container/Top10SeriesContainer.tsx
 import React, { useEffect, useState } from "react";
-
-// ⬇️ Ajustá las rutas según tu proyecto
 import { tmdbFetch } from "../../api/tmdb";
 import { posterUrl } from "../home/helpers";
-import { RankedListTop10 } from "../home/RankedListTop10";
 import { useNavigate } from "react-router-dom";
 import { onItemClickFactory } from "../home/helpers";
+import { PosterCarousel } from "../ui/PosterCarousel";
 
 type TvResult = {
   id: number;
@@ -38,16 +35,16 @@ export const Top10SeriesContainer: React.FC = () => {
   }, []);
 
   return (
-    <RankedListTop10
+    <PosterCarousel
       title="Top 10 series"
-      items={items.map((t, idx) => ({
+      onItemClick={onItemClick}
+      items={items.map((t) => ({
         id: t.id,
-        rank: idx + 1,
-        thumbUrl: posterUrl(t.poster_path ?? null, "w342"),
         title: t.name,
-        year: t.first_air_date ? String(t.first_air_date).slice(0, 4) : undefined,
+        posterUrl: posterUrl(t.poster_path ?? null, "w342"),
+        type: "series",
+        year: t.first_air_date ? Number(t.first_air_date.slice(0, 4)) : null,
         rating: t.vote_average,
-        onClick: () => onItemClick(t.id, "series"),
       }))}
     />
   );

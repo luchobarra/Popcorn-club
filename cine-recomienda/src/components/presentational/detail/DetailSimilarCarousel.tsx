@@ -1,4 +1,3 @@
-// src/components/presentational/detail/DetailSimilarCarousel.tsx
 import React from "react";
 import { PosterCarousel, type PosterCarouselItem } from "../../ui/PosterCarousel";
 
@@ -37,7 +36,7 @@ export const DetailSimilarCarousel: React.FC<DetailSimilarCarouselProps> = ({
       items={mapped}
       onItemClick={onItemClick}
       size="md"
-      variant="contained"   // ⬅️ vuelve al look “detail” original
+      variant="contained"   
     />
   );
 };

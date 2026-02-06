@@ -1,11 +1,11 @@
-// ContentPage.tsx
 import React, { useMemo, useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useContent } from "../../context/ContentContext";
 import { ContentContainer } from "../containers/ContentContainer";
-// import { Hero } from "../ui/HeroShell";
 import PageCards from "../pages/PageCards";
 import { FilterDrawer } from "../presentational/filter/FilterDrawer";
+import { FilterToggleButton } from "../presentational/filter/FilterToggleButton";
+import {ActiveFiltersChips} from "../presentational/filter/ActiveFiltersChips";
 
 type UIMovie = {
   id: number;
@@ -98,16 +98,12 @@ const ContentInner: React.FC = () => {
 
   return (
     <>
-      {/* HERO fijo arriba */}
-      {/* <Hero
-        variant={contentType === "movies" ? "movies" : "series"}
-        onScrollToContent={scrollToContent}
-        onOpenFilters={openFilters}
-      /> */}
+      <div className="px-4 sm:px-6 lg:px-8 pt-4">
+        <FilterToggleButton onClick={openFilters} />
+        <ActiveFiltersChips />
+      </div>
 
-      {/* Ancla de contenido */}
       <section id="page-content">
-        {/* Crossfade SOLO cuando cambia gridKey (tipo/filtros). Paginación no toca esto. */}
         <AnimatePresence mode="wait" initial={false}>
           {showGrid && (
             <motion.div
@@ -127,7 +123,6 @@ const ContentInner: React.FC = () => {
         </AnimatePresence>
       </section>
 
-      {/* Drawer de filtros (presentacional) */}
       <FilterDrawer
         open={filtersOpen}
         onClose={() => setFiltersOpen(false)}

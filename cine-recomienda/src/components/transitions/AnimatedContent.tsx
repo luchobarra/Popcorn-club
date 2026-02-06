@@ -14,7 +14,7 @@ interface AnimatedContentProps {
   initialOpacity?: number
   animateOpacity?: boolean
   scale?: number
-  threshold?: number // 0..1  → start: "top (1-threshold)*100%"
+  threshold?: number 
   delay?: number
   onComplete?: () => void
 }
@@ -35,7 +35,6 @@ export const AnimatedContent: React.FC<AnimatedContentProps> = ({
 }) => {
   const ref = useRef<HTMLDivElement>(null)
 
-  // Calculados afuera para usarlos también en el estilo inicial
   const axis = direction === 'horizontal' ? 'x' : 'y'
   const offset = reverse ? -distance : distance
   const startPct = Math.max(0, Math.min(100, (1 - threshold) * 100)) // clamp
@@ -44,7 +43,6 @@ export const AnimatedContent: React.FC<AnimatedContentProps> = ({
     const el = ref.current
     if (!el) return
 
-    // Respeto de reduced motion: pinta final y no anima
     const prefersReduced =
       typeof window !== 'undefined' &&
       window.matchMedia &&
@@ -56,7 +54,6 @@ export const AnimatedContent: React.FC<AnimatedContentProps> = ({
         return
       }
 
-      // NO hacemos gsap.set inicial: ya viene pintado con estilo inline
       gsap.to(el, {
         [axis]: 0,
         scale: 1,
@@ -75,14 +72,13 @@ export const AnimatedContent: React.FC<AnimatedContentProps> = ({
     }, ref)
 
     return () => {
-      ctx.revert() // limpia tweens y triggers creados en este contexto
+      ctx.revert() 
     }
   }, [axis, distance, reverse, duration, ease, initialOpacity, animateOpacity, scale, startPct, delay, onComplete])
 
   return (
     <div
       ref={ref}
-      // Estado inicial PINTADO antes del primer render → sin “salto”
       style={{
         transform:
           axis === 'x'

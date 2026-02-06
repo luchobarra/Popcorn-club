@@ -1,4 +1,3 @@
-// src/containers/ContentDetailContainer.tsx
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import type { DetailModel } from "../../api/tmdbDetail";
@@ -14,8 +13,8 @@ export interface ContentDetailState {
 }
 
 interface Props {
-  children?: (state: ContentDetailState) => React.ReactNode; // opcional: para inyectar una View luego
-  language?: string; // ej: "es-ES"
+  children?: (state: ContentDetailState) => React.ReactNode;
+  language?: string; 
 }
 
 export const ContentDetailContainer: React.FC<Props> = ({ children, language = "es-ES" }) => {
@@ -44,7 +43,6 @@ export const ContentDetailContainer: React.FC<Props> = ({ children, language = "
 
   useEffect(() => {
     void load();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [type, id, language]);
 
   const state: ContentDetailState = {
@@ -53,12 +51,8 @@ export const ContentDetailContainer: React.FC<Props> = ({ children, language = "
     data,
     refetch: load,
   };
-
-  // Si todavía no tenés View, podés loguear para testear:
   if (!children) {
     if (import.meta.env.DEV) {
-      // NO UI: solo debug en desarrollo
-      // eslint-disable-next-line no-console
       console.log("[ContentDetailContainer]", state);
     }
     return null;

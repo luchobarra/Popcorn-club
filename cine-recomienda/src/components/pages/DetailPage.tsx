@@ -32,12 +32,6 @@ interface DetailModel {
   trailers: Array<{ key: string; name: string; site: string; type?: string }>;
   cast: Array<{ id: number; name: string; character: string; profilePath: string | null }>;
   similar: Array<{ id: number; title: string; posterPath: string | null; type: DetailType; year?: number | null; rating?: number | null }>;
-  // (opcional) si más adelante agregás:
-  status?: string;
-  originalLanguage?: string;
-  releaseDate?: string;
-  productionCompanies?: string[];
-  productionCountries?: string[];
 }
 
 export const DetailPage: React.FC = () => {
@@ -74,12 +68,10 @@ export const DetailPage: React.FC = () => {
     };
   }, [typeParam, idParam]);
 
-  // Navegación a otro detalle (similar, cast futuro, etc.)
   const onItemClick = (id: number, type: DetailType) => {
-    contentDetail(navigate, { id, type }); // te lleva a /:type/:id
+    contentDetail(navigate, { id, type }); 
   };
 
-  // Normalizaciones livianas para la UI
   const castForUI = useMemo(
     () =>
       (data?.cast ?? []).map((c) => ({
@@ -128,12 +120,10 @@ export const DetailPage: React.FC = () => {
     );
   }
 
-  // Render final
   return (
     <>
       {data ? (
         <main className="bg-[var(--color-background)]">
-          {/* HERO */}
           <AnimatedContent
             distance={100}
             direction="vertical"
@@ -166,8 +156,7 @@ export const DetailPage: React.FC = () => {
             />
           </AnimatedContent>
   
-          {/* Contenido con ancho limitado */}
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-12">
             <AnimatedContent
               distance={100}
               direction="vertical"
@@ -181,14 +170,9 @@ export const DetailPage: React.FC = () => {
             >
               <DetailOverview
                 overview={data.overview}
-                status={data.status}
-                originalLanguage={data.originalLanguage}
-                releaseDate={data.releaseDate}
                 runtimeMinutes={data.runtimeMinutes ?? undefined}
                 seasonsCount={data.seasons ?? undefined}
                 episodesCount={data.episodes ?? undefined}
-                productionCompanies={data.productionCompanies}
-                productionCountries={data.productionCountries}
               />
             </AnimatedContent>
   

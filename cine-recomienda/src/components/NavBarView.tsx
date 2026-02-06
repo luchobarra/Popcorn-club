@@ -1,9 +1,9 @@
-// src/components/NavBarView.tsx
 import React, { useEffect, useState } from "react";
-import { Menu, User } from "lucide-react";
+import { User } from "lucide-react";
+import { PopcornClubLogo } from "./ui/PopcornClubLogo";
+import { MobileMenu } from "./ui/MobileMenu";
 
 export type Section = "home" | "movies" | "series";
-
 export type NavBarVariant = "hero" | "solid";
 
 export interface NavBarViewProps {
@@ -20,12 +20,10 @@ export interface NavBarViewProps {
 export const NavBarView: React.FC<NavBarViewProps> = ({
   current,
   onNavigate,
-  onToggleSidebar,
   variant,
 }) => {
   const [solid, setSolid] = useState(false);
 
-  // Cambia a "sólido" al scrollear (sobre los heroes queda transparente)
   useEffect(() => {
     const onScroll = () => setSolid(window.scrollY > 24);
     onScroll();
@@ -39,15 +37,7 @@ export const NavBarView: React.FC<NavBarViewProps> = ({
   ];
 
   return (
-    // <nav
-    //   aria-label="Main"
-    //   data-solid={solid ? "true" : "false"}
-    //   className={[
-    //     // queda fijo en el hero
-    //     "absolute top-0 left-0 right-0 z-[80] w-full",
-    //     "transition-[background-color,backdrop-filter,border-color,box-shadow] duration-300",
-    //   ].join(" ")}
-    // >
+
     <nav
       aria-label="Main"
       data-solid={variant === "hero" && solid ? "true" : "false"}
@@ -60,55 +50,16 @@ export const NavBarView: React.FC<NavBarViewProps> = ({
     >
       <div className="relative flex h-[var(--navbar-height)] items-center justify-between px-4 md:px-6">
         {/* Left: Brand */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3">         
+          
           {/* Mobile hamburger */}
-          <button
-            onClick={onToggleSidebar}
-            className="md:hidden rounded-full p-2 bg-[var(--color-surface)]/70 hover:bg-[var(--color-surface)]/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-secondary)] transition cursor-pointer"
-            aria-label="Toggle sidebar"
-          >
-            <Menu className="h-5 w-5 text-[var(--color-text-primary)]" />
-          </button>
-
-          <button
-            onClick={() => onNavigate("home")}
-            className="group inline-flex items-center gap-2 rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-secondary)] cursor-pointer"
-            aria-label="Go home"
-          >
-            <span
-              className="text-xl md:text-2xl font-extrabold tracking-tight
-                         bg-gradient-to-r from-[var(--color-secondary)] via-[var(--color-accent)] to-[var(--color-secondary)]
-                         bg-clip-text text-transparent
-                         group-hover:brightness-110 group-active:scale-[0.98] transition"
-            >
-              Popcorn Club
-            </span>
-
-            <svg
-              className="h-6 w-6 md:h-7 md:w-7 drop-shadow-sm group-hover:brightness-110 group-active:scale-[0.98] transition"
-              viewBox="0 0 24 24"
-              fill="none"
-              aria-hidden="true"
-            >
-              <path
-                d="M6 9h12l-1.2 10.2a2 2 0 0 1-2 1.8H9.2a2 2 0 0 1-2-1.8L6 9Z"
-                stroke="currentColor"
-                className="text-[var(--color-surface)]"
-                strokeWidth="1.2"
-              />
-              <path
-                d="M8 9l.8 11M10.5 9l.5 12M13.5 9l-.5 12M16 9l-.8 11"
-                stroke="currentColor"
-                className="text-[var(--color-secondary)]/80"
-                strokeWidth="1.1"
-              />
-              <path
-                d="M5.5 8.5h13c0-2-1.4-3.5-3.4-3.5-.6-1.2-1.8-2-3.1-2s-2.5.8-3.1 2C7.9 5 6.5 6.5 5.5 8.5Z"
-                fill="currentColor"
-                className="text-[var(--color-accent)]/80"
-              />
-            </svg>
-          </button>
+          <MobileMenu />
+          
+          {/* Logo/link (desktop) */}
+          <div className="absolute left-1/2 -translate-x-1/2 md:static md:translate-x-0">
+            <PopcornClubLogo />
+          </div>
+          
         </div>
 
         {/* Center: Navigation (Desktop) */}

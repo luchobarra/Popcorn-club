@@ -34,7 +34,6 @@ const PanelBlock: React.FC<Panel & { reverseOnMobile?: boolean }> = ({
 }) => {
   return (
     <div className="relative min-h-[240px] sm:min-h-[280px] md:min-h-[320px] bg-[#1F2937]">
-      {/* Fondo */}
       {backgroundUrl ? (
         <>
             <img

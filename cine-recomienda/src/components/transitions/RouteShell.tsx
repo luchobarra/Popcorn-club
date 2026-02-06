@@ -13,7 +13,7 @@ const EASE_PAGE = cubicBezier(0.22, 1, 0.3, 1)
 const OFFSET_PUSH = 16
 const OFFSET_POP = -16
 
-// 🔎 helper local
+// helper local
 const useIsDetail = () => {
     const { pathname } = useLocation()
     return /^\/(movies|series)\/\d+/.test(pathname)
@@ -97,7 +97,7 @@ const RouteAnimator: React.FC<PropsWithChildren> = ({ children }) => {
             </motion.div>
         </AnimatePresence>
 
-        {/* 🧯 Cortina anti-destello: SOLO en detalle */}
+        {/* Cortina anti-destello: SOLO en detalle */}
         {isDetail && (
             <motion.div
             hidden={isPresent}

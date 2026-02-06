@@ -1,4 +1,3 @@
-// src/components/ui/PosterCarousel.tsx
 import React from "react";
 import { HorizontalScroll } from "./HorizontalScroll";
 import { PosterCard } from "./PosterCard";
@@ -35,7 +34,7 @@ export const PosterCarousel: React.FC<Props> = ({
 
   const sectionCls = isContained
     ? `max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-10 ${className}`
-    : `w-full space-y-3 ${className}`;
+    : `w-full  space-y-3 ${className}`;
 
   const titleCls = "text-base sm:text-lg md:text-xl lg:text-2xl font-bold text-[var(--color-text-primary)] mb-3 sm:mb-4 md:mb-5";
 

@@ -1,14 +1,12 @@
-// src/context/ContentContext.tsx
 import { createContext, useContext } from "react";
 
 export type ContentType = "movies" | "series";
 
-/** Filtros que usa el ContentFiltersContainer (igual que antes) */
 export interface FiltersState {
   genre: number | null;
-  year: string; // "" = ninguno
+  year: string; 
   minVote: number;
-  sortBy: string; // p.ej. "popularity.desc", "vote_average.desc", ...
+  sortBy: string; 
 }
 
 export interface ContentItem {
@@ -50,12 +48,10 @@ export interface ContentContextValue {
   onCardClick: (id: number, type?: "movies" | "series") => void;
 }
 
-const ContentContext = createContext<ContentContextValue | undefined>(undefined);
+export const ContentContext = createContext<ContentContextValue | undefined>(undefined);
 
 export const useContent = (): ContentContextValue => {
   const ctx = useContext(ContentContext);
   if (!ctx) throw new Error("useContent must be used within a ContentProvider");
   return ctx;
 };
-
-export default ContentContext;

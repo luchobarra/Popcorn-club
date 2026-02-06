@@ -1,12 +1,9 @@
-// src/components/container/Top10MoviesContainer.tsx
 import React, { useEffect, useState } from "react";
-
-// ⬇️ Ajustá las rutas según tu proyecto
 import { tmdbFetch } from "../../api/tmdb";
 import { posterUrl } from "../home/helpers";
-import { RankedListTop10 } from "../home/RankedListTop10";
 import { useNavigate } from "react-router-dom";
 import { onItemClickFactory } from "../home/helpers";
+import { PosterCarousel } from "../ui/PosterCarousel";
 
 type MovieResult = {
   id: number;
@@ -39,16 +36,16 @@ export const Top10MoviesContainer: React.FC = () => {
   }, []);
 
   return (
-    <RankedListTop10
+    <PosterCarousel
       title="Top 10 películas"
-      items={items.map((m, idx) => ({
+      onItemClick={onItemClick}
+      items={items.map((m) => ({
         id: m.id,
-        rank: idx + 1,
-        thumbUrl: posterUrl(m.poster_path ?? null, "w342"),
         title: m.title,
-        year: m.release_date ? String(m.release_date).slice(0, 4) : undefined,
+        posterUrl: posterUrl(m.poster_path ?? null, "w342"),
+        type: "movies",
+        year: m.release_date ? Number(m.release_date.slice(0, 4)) : null,
         rating: m.vote_average,
-        onClick: () => onItemClick(m.id, "movies"),
       }))}
     />
   );

@@ -15,7 +15,7 @@ export const useNavLoad = () => {
   return ctx
 }
 
-const SHOW_AFTER_MS = 600     // umbral para mostrar overlay/barra (evita flash)
+const SHOW_AFTER_MS = 600     // umbral para mostrar overlay/barra 
 const MIN_VISIBLE_MS = 400    // tiempo mínimo visible si llegó a mostrarse
 
 export const NavLoadProvider: React.FC<React.PropsWithChildren> = ({ children }) => {

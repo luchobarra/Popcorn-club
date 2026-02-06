@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState, useCallback } from "react";
-import ContentContext, { type ContentItem, type FiltersState, type Genre } from "../../context/ContentContext";
+import { ContentContext, type ContentItem, type FiltersState, type Genre } from "../../context/ContentContext";
 import { tmdbFetch } from "../../api/tmdb"; 
 import { useNavigate, useLocation } from "react-router-dom";
 import { contentDetail } from "../../../lib/contentDetail";  
@@ -9,18 +9,9 @@ interface Props {
   children: React.ReactNode;
 }
 
-/**
- * ContentContainer = proveedor de contexto con TODA la lógica.
- * Uso: envolver la UI que consume el contexto:
- * <ContentContainer>
- *   <ContentFiltersContainer />
- *   <PageCards ... />
- * </ContentContainer>
- */
 export const ContentContainer: React.FC<Props> = ({ children }) => {
-  // contentType viene del ContentTypeContext (Navbar setea ahí)
-  const navigate = useNavigate();
 
+  const navigate = useNavigate();
   const [items, setItems] = useState<ContentItem[]>([]);
   const [allGenres, setAllGenres] = useState<Genre[]>([]);
   const [genresMap, setGenresMap] = useState<Record<number, string>>({});
@@ -43,12 +34,10 @@ export const ContentContainer: React.FC<Props> = ({ children }) => {
     sortBy: "vote_average.desc",
   });
 
-  // para deduplicar eficiencia O(1)
   const seenIdsRef = useRef<Set<number>>(new Set());
-  // para descartar respuestas viejas
   const requestIdRef = useRef(0); 
 
-  // --- Fetch géneros según tipo (movie | tv)
+  // Fetch géneros según tipo (movie | tv)
   useEffect(() => {
     const fetchGenres = async () => {
       try {
@@ -66,12 +55,12 @@ export const ContentContainer: React.FC<Props> = ({ children }) => {
     fetchGenres();
   }, [routeType]);
 
-  // --- Helper: construir URL discover según type + filtros + página
+  // Helper: construir URL discover según type + filtros + página
   const buildUrl = (pageNumber: number = 1) => {
     const isMovies = routeType === "movies";
     const type = isMovies ? "movie" : "tv";
   
-    // defaults más sanos: TV por popularidad y con más votos
+    // defaults: TV por popularidad y con más votos
     const sortBy = appliedFilters.sortBy || (isMovies ? "vote_average.desc" : "popularity.desc");
     const minVotes = isMovies ? 200 : 300;
   
@@ -106,7 +95,7 @@ export const ContentContainer: React.FC<Props> = ({ children }) => {
     return `/discover/${type}?${params.join("&")}`;
   };  
 
-  // --- Fetch inicial / cuando cambian filtros o génerosMap -> precargar p1 y p2
+  // Fetch inicial / cuando cambian filtros o génerosMap -> precargar p1 y p2
   useEffect(() => {
     const fetchFiltered = async () => {
       if (Object.keys(genresMap).length === 0) return;
@@ -121,7 +110,6 @@ export const ContentContainer: React.FC<Props> = ({ children }) => {
 
         const allResults = [...(r1.results || []), ...(r2.results || [])];
 
-        // formateo y dedupe
         seenIdsRef.current.clear();
         const formatted = allResults
           .map((item: any) => {
@@ -151,7 +139,7 @@ export const ContentContainer: React.FC<Props> = ({ children }) => {
           });
 
         setItems(formatted);
-        setPage(2); // ya cargamos la 1 y 2
+        setPage(2); 
       } catch (err) {
         console.error("Error al obtener items filtrados:", err);
       } finally {
@@ -160,10 +148,9 @@ export const ContentContainer: React.FC<Props> = ({ children }) => {
     };
 
     fetchFiltered();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [appliedFilters, genresMap, routeType]);
 
-  // --- loadMore (infinite scroll / "cargar más")
+  // (infinite scroll / "cargar más")
   const loadMoreItems = async () => {
     if (loading || Object.keys(genresMap).length === 0) return;
     setLoading(true);
@@ -211,7 +198,7 @@ export const ContentContainer: React.FC<Props> = ({ children }) => {
     }
   };
 
-  // --- handler que recibirá ContentFiltersContainer
+  // handler que recibirá ContentFiltersContainer
   const handleApplyFilters = (f: FiltersState) => {
     // aplicamos filtros (se cargan de nuevo)
     setAppliedFilters(f);
@@ -220,14 +207,12 @@ export const ContentContainer: React.FC<Props> = ({ children }) => {
     // la effect de [appliedFilters] se encargará del fetch
   };
 
-  // --- click global para ir al detalle
+  // click global para ir al detalle
   const onCardClick = (id: number, explicitType?: "movies" | "series") => {
     const type = explicitType ?? (routeType === "movies" ? "movies" : "series");
     contentDetail(navigate, { type, id });
   };
 
-
-  // --- Detector de scroll: si querés habilitarlo aquí, o preferir que el UI use loadMoreItems
   useEffect(() => {
     const onScroll = () => {
       if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 500 && !loading) {
@@ -236,10 +221,8 @@ export const ContentContainer: React.FC<Props> = ({ children }) => {
     };
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loading, page, genresMap, routeType]);
 
-  // --- valor que exponemos en el contexto
   const ctxValue = {
     contentType: routeType,
     routeType,

@@ -1,4 +1,3 @@
-// src/components/presentational/filter/FilterDrawer.tsx
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { X, SlidersHorizontal } from "lucide-react";

@@ -8,15 +8,15 @@ const WIDTH: Record<PosterSize, string> = {
   md: "w-[clamp(9rem,20vw,12rem)]",
   lg: "w-[clamp(10.5rem,22vw,14rem)]",
   xl: "w-[clamp(12rem,24vw,16rem)]",
-  detail: "w-[clamp(7rem,16vw,12rem)]", // sugerido para Detail
+  detail: "w-[clamp(7rem,16vw,12rem)]", 
 }
 
 export interface PosterProps {
   src: string | null
   alt: string
   size?: PosterSize
-  ratio?: `${number} / ${number}` | string // ej. "2 / 3"
-  rounded?: string // tailwind, ej. "rounded-2xl"
+  ratio?: `${number} / ${number}` | string 
+  rounded?: string 
   border?: boolean
   shadow?: boolean
   className?: string

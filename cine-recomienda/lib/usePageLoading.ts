@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react"
-import { useNavLoad } from "../src/components/transitions/NavLoadContext" // usa el MISMO path que RouteShell
+import { useNavLoad } from "../src/components/transitions/NavLoadContext" 
 
 export const usePageLoading = (loading: boolean) => {
   const { start, stop } = useNavLoad()

@@ -25,10 +25,6 @@ export const ContentTypeProvider = ({
   );
 };
 
-/**
- * Hook para consumir el context desde cualquier componente:
- * const { contentType, setContentType } = useContentType();
- */
 export const useContentType = (): ContentTypeContextValue => {
   const ctx = useContext(ContentTypeContext);
   if (!ctx) {

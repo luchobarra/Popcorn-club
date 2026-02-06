@@ -1,4 +1,3 @@
-// lib/useMinDelay.ts
 import { useEffect, useRef, useState } from "react";
 
 export function useMinDelay(loading: boolean, minMs = 300) {
@@ -12,7 +11,7 @@ export function useMinDelay(loading: boolean, minMs = 300) {
         startRef.current = Date.now();
         setShow(true);
         return () => {
-            if (timeout) clearTimeout(timeout); // <-- cleanup siempre devuelve void
+            if (timeout) clearTimeout(timeout);
         };
         }
 
@@ -22,7 +21,7 @@ export function useMinDelay(loading: boolean, minMs = 300) {
         timeout = setTimeout(() => setShow(false), remain);
 
         return () => {
-        if (timeout) clearTimeout(timeout);   // <-- nada de devolver números/0
+        if (timeout) clearTimeout(timeout); 
         };
     }, [loading, minMs]);
 

@@ -1,4 +1,3 @@
-// src/components/container/PopularMoviesRailContainer.tsx
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { tmdbFetch } from "../../api/tmdb";

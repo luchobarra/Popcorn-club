@@ -19,10 +19,10 @@ export default function PageCards({ movies }: PageCardsProps) {
   const appType = contentType === "movies" ? "movies" : "series";
 
   return (
-    <section className="py-[clamp(1.5rem,3vw,3rem)] px-[clamp(1rem,3vw,2rem)]">
-      <div className="max-w-7xl mx-auto">
+    <section className="py-[clamp(1rem,2vw,2.5rem)] px-[clamp(.75rem,2vw,1.5rem)]">
+      <div className="mx-auto w-full px-1 sm:px-0">
         
-        <div className="grid [grid-template-columns:repeat(auto-fit,minmax(clamp(10.5rem,24vw,15rem),1fr))] gap-[clamp(.9rem,2.2vw,1.25rem)] place-items-start">
+        <div className="grid [grid-template-columns:repeat(auto-fill,minmax(clamp(9rem,14vw,13rem),1fr))] gap-[clamp(.4rem,1vw,.75rem)] justify-items-center">
           {movies.map((m) => (
             <motion.div
               key={m.id}

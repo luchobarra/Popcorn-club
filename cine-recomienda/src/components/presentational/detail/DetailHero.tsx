@@ -202,6 +202,5 @@ export const DetailHero: React.FC<DetailHeroProps> = ({
             </div>
           </section>
         </AnimatedContent>
-      );
-      
+      );      
 };

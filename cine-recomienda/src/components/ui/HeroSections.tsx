@@ -9,8 +9,8 @@ type Props = {
   subtitle?: string;
   ctaLabel?: string;
   onPrimaryCta?: () => void;
-  minHeightClass?: string;                 // alto del hero
-  overlay?: "none" | "lr" | "tb";          // degradé del fondo
+  minHeightClass?: string;        
+  overlay?: "none" | "lr" | "tb";        
   className?: string;
 };
 
@@ -65,12 +65,8 @@ export const HeroSection: React.FC<Props> = ({
         )}
       </div>
 
-      {/* Contenido perfectamente centrado */}
       <div className="relative z-10 min-h-[70svh] flex flex-col">
-        {/* reserva el alto del navbar fijo dentro del hero */}
         <div className="h-[var(--navbar-height)] shrink-0" />
-
-        {/* área restante perfectamente centrada */}
         <div className="flex-1 grid place-items-center">
             <div className="w-full max-w-7xl px-[clamp(1rem,3vw,2rem)]">
             <div className="text-center max-w-3xl mx-auto">
