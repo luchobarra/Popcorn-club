@@ -82,10 +82,7 @@ const ContentInner: React.FC = () => {
     });
   }, [items, genresMap]);
 
-  // Handlers del Hero
-  const scrollToContent = () => {
-    document.getElementById("page-content")?.scrollIntoView({ behavior: "smooth", block: "start" });
-  };
+
   const openFilters = () => setFiltersOpen(true);
 
   // Géneros para el Drawer

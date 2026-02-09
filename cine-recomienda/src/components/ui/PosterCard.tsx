@@ -20,7 +20,6 @@ export const PosterCard: React.FC<PosterCardProps> = ({
   id, type, title,
   posterUrl,
   backdropUrl = null,
-  size = "lg",
   aspect = "poster",
   onClick,
 }) => {
@@ -90,7 +89,7 @@ export const PosterCard: React.FC<PosterCardProps> = ({
           loading="lazy"
         />
       </div>
-      
+
       <span
         aria-hidden
         className="pointer-events-none absolute -inset-[30%] translate-x-[-120%] rotate-[20deg] opacity-0 group-hover:opacity-100"
