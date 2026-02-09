@@ -9,7 +9,7 @@ import { DetailSimilarCarousel } from "../presentational/detail/DetailSimilarCar
 // Servicio + helper de navegación 
 import { fetchDetail } from "../../api/tmdbDetail";
 import { contentDetail } from "../../../lib/contentDetail";
-import { usePageLoading } from "../../../lib/UsePageLoading"
+import { usePageLoading } from "../../../lib/usePageLoading"
 import { AnimatedContent } from "../transitions/AnimatedContent"
 
 
