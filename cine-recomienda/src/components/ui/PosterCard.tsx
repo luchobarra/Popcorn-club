@@ -48,8 +48,8 @@ export const PosterCard: React.FC<PosterCardProps> = ({
 
   const classSize =
     aspect === "landscape"
-      ? "aspect-[16/9] w-[clamp(14rem,22vw,18rem)]"
-      : "aspect-[2/3]  w-[clamp(9rem,16vw,12rem)]"
+      ? "aspect-[16/9] w-[clamp(9rem,22vw,18rem)]"
+      : "aspect-[2/3]  w-[clamp(7rem,16vw,12rem)]"
   const usingLandscape = aspect === "landscape"
   const primarySrc = usingLandscape ? backdropUrl : posterUrl
   const fallbackSrc = !primarySrc && usingLandscape ? posterUrl : null

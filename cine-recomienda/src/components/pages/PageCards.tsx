@@ -22,7 +22,7 @@ export default function PageCards({ movies }: PageCardsProps) {
     <section className="py-[clamp(1rem,2vw,2.5rem)] px-[clamp(.75rem,2vw,1.5rem)]">
       <div className="mx-auto w-full px-1 sm:px-0">
         
-        <div className="grid [grid-template-columns:repeat(auto-fill,minmax(clamp(9rem,14vw,13rem),1fr))] gap-[clamp(.4rem,1vw,.75rem)] justify-items-center">
+        <div className="grid grid-cols-3 sm:[grid-template-columns:repeat(auto-fill,minmax(clamp(9rem,14vw,13rem),1fr))] gap-[clamp(.4rem,1vw,.75rem)] justify-items-center">
           {movies.map((m) => (
             <motion.div
               key={m.id}
